@@ -1,0 +1,68 @@
+@import "tailwindcss";
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-display: "Archivo Black", "Inter", sans-serif;
+  --font-condensed: "Bebas Neue", "Oswald", sans-serif;
+
+  --color-ink-950: #0a0d14;
+  --color-ink-900: #11151f;
+  --color-ink-800: #1b2130;
+  --color-ink-700: #2b3345;
+  --color-ink-500: #5c6577;
+  --color-ink-400: #8a93a3;
+  --color-ink-300: #b9c0cc;
+  --color-ink-200: #dfe3ea;
+  --color-ink-100: #eef0f4;
+  --color-paper: #f6f5f1;
+  --color-paper-deep: #edeae2;
+  --color-gold: #f2c14e;
+  --color-gold-deep: #d9a52f;
+  --color-cobalt: #2f4bd8;
+  --color-cobalt-soft: #e6eaff;
+  --color-mint: #1f9d76;
+  --color-danger: #c83535;
+}
+
+@layer base {
+  html { -webkit-tap-highlight-color: transparent; scroll-behavior: smooth; }
+  body {
+    background: var(--color-paper);
+    color: var(--color-ink-950);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  ::selection { background: var(--color-gold); color: var(--color-ink-950); }
+  input, select, textarea, button { font: inherit; }
+  :focus-visible { outline: 2px solid var(--color-cobalt); outline-offset: 2px; }
+}
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  .studio-grid {
+    background-image:
+      linear-gradient(to right, rgba(10, 13, 20, 0.055) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(10, 13, 20, 0.055) 1px, transparent 1px);
+    background-size: 24px 24px;
+  }
+  .checker {
+    background-image:
+      linear-gradient(45deg, #e6e4de 25%, transparent 25%),
+      linear-gradient(-45deg, #e6e4de 25%, transparent 25%),
+      linear-gradient(45deg, transparent 75%, #e6e4de 75%),
+      linear-gradient(-45deg, transparent 75%, #e6e4de 75%);
+    background-size: 16px 16px;
+    background-position: 0 0, 0 8px, 8px -8px, -8px 0;
+  }
+  .touch-none { touch-action: none; }
+  .shadow-soft { box-shadow: 0 1px 2px rgba(10, 13, 20, .04), 0 12px 32px -12px rgba(10, 13, 20, .18); }
+  .shadow-lift { box-shadow: 0 2px 6px rgba(10, 13, 20, .06), 0 24px 60px -24px rgba(10, 13, 20, .3); }
+}
+
+/* Poignées et curseurs du studio */
+input[type="range"] { accent-color: var(--color-cobalt); }
+.dp-scroll { scrollbar-width: thin; scrollbar-color: var(--color-ink-300) transparent; }
+.dp-scroll::-webkit-scrollbar { width: 8px; height: 8px; }
+.dp-scroll::-webkit-scrollbar-thumb { background: var(--color-ink-300); border-radius: 999px; }

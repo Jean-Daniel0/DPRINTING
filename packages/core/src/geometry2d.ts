@@ -25,6 +25,22 @@ export function layerBounds(l: Box): Bounds {
   return { minX: Math.min(...c.map(p => p.x)), minY: Math.min(...c.map(p => p.y)), maxX: Math.max(...c.map(p => p.x)), maxY: Math.max(...c.map(p => p.y)) };
 }
 
+/**
+ * Rectangle englobant réellement imprimé : union des calques visibles (opacité > 0).
+ * C'est cette surface qui est facturée et exportée, pas la zone maximale du produit.
+ */
+export function contentBounds(layers: Layer[]): Bounds | null {
+  let b: Bounds | null = null;
+  for (const l of layers) {
+    if (!l.visible || l.opacity <= 0) continue;
+    const lb = layerBounds(l);
+    b = b
+      ? { minX: Math.min(b.minX, lb.minX), minY: Math.min(b.minY, lb.minY), maxX: Math.max(b.maxX, lb.maxX), maxY: Math.max(b.maxY, lb.maxY) }
+      : lb;
+  }
+  return b;
+}
+
 /** Point (en mm, repère de la zone) dans le calque tourné ? (pour la sélection au doigt/souris) */
 export function pointInLayer(l: Box, px: number, py: number, pad = 0): boolean {
   const local = rot(px - l.x, py - l.y, -l.rotation);

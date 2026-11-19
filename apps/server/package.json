@@ -5,8 +5,10 @@
   "type": "module",
   "scripts": {
     "dev": "tsx watch src/server.ts",
-    "build": "esbuild src/server.ts --bundle --platform=node --target=node20 --format=cjs --outfile=dist/server.cjs --sourcemap",
+    "build": "esbuild src/server.ts --bundle --platform=node --target=node22 --format=esm --outfile=dist/server.mjs --banner:js=\"import { createRequire } from 'node:module'; const require = createRequire(import.meta.url);\" --external:pg --external:@electric-sql/pglite --external:@supabase/supabase-js --external:bufferutil --external:utf-8-validate",
+    "start": "node dist/server.mjs",
     "typecheck": "tsc -p tsconfig.json",
-    "test": "tsx tests/run.ts"
+    "test": "tsx tests/run.ts",
+    "admin:hash": "tsx src/scripts/hash-password.ts"
   }
 }
