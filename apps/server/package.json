@@ -1,0 +1,12 @@
+{
+  "name": "@dprinting/server",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "build": "esbuild src/server.ts --bundle --platform=node --target=node20 --format=cjs --outfile=dist/server.cjs --sourcemap",
+    "typecheck": "tsc -p tsconfig.json",
+    "test": "tsx tests/run.ts"
+  }
+}
