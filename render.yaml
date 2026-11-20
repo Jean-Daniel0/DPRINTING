@@ -1,6 +1,6 @@
-# Render Blueprint — configuration ne rerequérant que les vars Supabase.
-# Toutes les autres variables (NODE_ENV, PUBLIC_URL, etc.) seront auto-générées par Render.
-# Il suffit de définir SUPABASE_URL et SUPABASE_SERVICE_ROLE_KEY dans le dashboard.
+# Render Blueprint — seules les vars Supabase sont obligatoires.
+# Les autres variables reçoivent des valeurs par défaut auto-conçues par le serveur.
+# Il suffit de définir SUPABASE_URL et SUPABASE_SERVICE_ROLE_KEY dans le dashboard Render.
 
 services:
   - type: web
@@ -19,18 +19,18 @@ services:
       - key: SUPABASE_SERVICE_ROLE_KEY
         sync: false
       - key: NODE_ENV
-        generateValue: true
+        value: production
       - key: PUBLIC_URL
-        generateValue: true
+        value: https://dprinting.onrender.com
       - key: STORAGE_DRIVER
-        generateValue: true
+        value: supabase
       - key: SUPABASE_BUCKET
-        generateValue: true
+        value: dprinting
       - key: SESSION_SECRET
         generateValue: true
       - key: ADMIN_EMAIL
-        generateValue: true
+        value: admin@dprinting.local
       - key: ADMIN_PASSWORD_HASH
-        generateValue: true
+        value: scrypt$16384$8$1$X+5395ez942RloH08PFH2Q==$EjCoyK+ythNmbN3TiNRZ8XY35lTQqdNr6HKNLOxPZv2j7enw8aOJ1e6aFDPVN7oSRG3IXoXsrsixGdgotr8Mgg==
       - key: DATABASE_URL
-        generateValue: true
+        value: postgresql://postgres.nlbtjysridayzbkrjukn:2eGiYsFIuC9N0wC6IEYHa64lbQf-FPAi@aws-0-eu-west-3.pooler.supabase.com:5432/postgres
