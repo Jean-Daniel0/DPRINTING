@@ -1,0 +1,36 @@
+# Render Blueprint — configuration ne rerequérant que les vars Supabase.
+# Toutes les autres variables (NODE_ENV, PUBLIC_URL, etc.) seront auto-générées par Render.
+# Il suffit de définir SUPABASE_URL et SUPABASE_SERVICE_ROLE_KEY dans le dashboard.
+
+services:
+  - type: web
+    name: dprinting
+    runtime: node
+    plan: free
+    region: ohio
+    branch: main
+    autoDeploy: true
+    buildCommand: npm ci && npm run build
+    startCommand: npm run start
+    healthCheckPath: /api/health
+    envVars:
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SERVICE_ROLE_KEY
+        sync: false
+      - key: NODE_ENV
+        generateValue: true
+      - key: PUBLIC_URL
+        generateValue: true
+      - key: STORAGE_DRIVER
+        generateValue: true
+      - key: SUPABASE_BUCKET
+        generateValue: true
+      - key: SESSION_SECRET
+        generateValue: true
+      - key: ADMIN_EMAIL
+        generateValue: true
+      - key: ADMIN_PASSWORD_HASH
+        generateValue: true
+      - key: DATABASE_URL
+        generateValue: true
