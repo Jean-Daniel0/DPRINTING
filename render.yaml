@@ -1,6 +1,6 @@
-# Render Blueprint — seules les vars Supabase sont obligatoires.
-# Les autres variables reçoivent des valeurs par défaut auto-conçues par le serveur.
-# Il suffit de définir SUPABASE_URL et SUPABASE_SERVICE_ROLE_KEY dans le dashboard Render.
+# Render Blueprint — seules SUPABASE_URL et SUPABASE_SERVICE_ROLE_KEY sont obligatoires (sync: false).
+# Toutes les autres variables reçoivent des valeurs par défaut dans le serveur.
+# Le build utilise npm ci pour une installation propre des dépendances.
 
 services:
   - type: web
