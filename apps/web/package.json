@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host",
-    "build": "vite build && cp dist/index.html index.html",
+    "build": "vite build",
     "typecheck": "tsc -p tsconfig.json"
   },
   "devDependencies": {

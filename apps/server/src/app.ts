@@ -40,6 +40,12 @@ export function buildApp({ config, sql, storage }: Deps): Express {
   app.use(express.json({ limit: '2mb' }));
 
   // ---------- santé ----------
+  // Ping ultra-léger pour les keep-alive externes : aucune requête base de données.
+  app.get('/api/ping', (_req, res) => {
+    res.setHeader('Cache-Control', 'no-store');
+    res.json({ ok: true, time: new Date().toISOString() });
+  });
+
   app.get('/api/health', async (_req, res) => {
     try {
       await sql.query('select 1');
