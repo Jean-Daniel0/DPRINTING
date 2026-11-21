@@ -13,7 +13,7 @@ Plateforme de print on demand avec studio de personnalisation 2D, visualisation 
 | API : catalogue, devis, designs, fichiers, commandes, admin | ✅ terminé, 17 tests d'intégration |
 | Stockage Supabase / local et base PostgreSQL / PGlite | ✅ terminé |
 | Studio web (éditeur + 3D + aperçus + commande) | ✅ terminé |
-| Déploiement Render + Supabase | ⏳ build Render en cours de validation |
+| Déploiement Render + Supabase | ✅ en ligne (health 200, base et stockage Supabase) |
 
 Rien n'est simulé : les méthodes d'impression dont le fichier de production n'est pas encore développé (sérigraphie, vinyle, broderie)
 sont refusées par l'API avec une explication explicite. Aucun prix envoyé par le client n'est accepté : le serveur recalcule tout.
@@ -75,11 +75,26 @@ Le plan gratuit Render endort le service après ~15 minutes sans trafic. **Aucun
 l'empêcher** : une fois endormi, le processus n'existe plus. La seule solution est un ping externe.
 
 - Endpoint dédié, sans accès base de données : `GET /api/ping`
-- Workflow fourni : `.github/workflows/keep-awake.yml` (toutes les 10 minutes + déclenchement manuel)
+- **Méthode active** : tâche `pg_cron` + `pg_net` dans Supabase, toutes les 10 minutes.
+  Installation idempotente :
 
-Limites honnêtes : GitHub peut retarder les tâches planifiées, les désactive après 60 jours sans
-activité du dépôt, et maintenir le service éveillé 24/7 consomme le quota mensuel d'heures Render.
-Pour éviter cette consommation, supprimez le workflow et acceptez le démarrage à froid (~50 s).
+  ```bash
+  npm run keepalive:setup -w @dprinting/server
+  # vérifier les dernières exécutions et codes HTTP :
+  npm run keepalive:setup -w @dprinting/server -- --status
+  ```
+
+  Le script lit `DATABASE_URL` et `KEEPALIVE_URL` (défaut : `https://dprinting.onrender.com/api/ping`).
+  Prérequis : extensions `pg_cron` et `pg_net` activées dans Supabase (Database → Extensions).
+  Vérifié en production : exécution `succeeded`, réponse HTTP `200`.
+- **Alternative** : `.github/workflows/keep-awake.yml` est fourni comme exemple dans
+  `docs/keep-awake.workflow.yml.example`. Pour l'activer, copiez-le dans `.github/workflows/` et
+  poussez avec un jeton disposant du scope `workflow` (GitHub refuse ce fichier sans ce scope).
+
+Limites honnêtes : maintenir le service éveillé 24/7 consomme le quota mensuel d'heures Render, et
+`pg_cron` ne tourne que si la base Supabase n'est pas mise en pause (projet gratuit inactif 7 jours).
+Pour ne pas consommer ce quota, supprimez la tâche :
+`select cron.unschedule('dprinting-keepalive');`
 
 ## Structure
 

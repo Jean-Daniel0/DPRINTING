@@ -1,0 +1,52 @@
+# Garde le service Render éveillé (plan gratuit : mise en veille après ~15 min sans trafic).
+# Un ping externe est la SEULE méthode fiable : une fois endormi, le processus du site
+# ne tourne plus, donc aucun code interne ne peut se réveiller lui-même.
+#
+# Limites à connaître :
+# - GitHub peut retarder les tâches planifiées (souvent de quelques minutes).
+# - Les workflows planifiés sont désactivés après 60 jours sans activité sur le dépôt.
+# - Le plan gratuit Render dispose d'un quota mensuel d'heures d'instance ; un service
+#   maintenu éveillé 24/7 le consomme. Vérifiez votre quota dans le dashboard Render.
+#
+# Alternative si le quota Render est un souci : laissez le service s'endormir et
+# acceptez le démarrage à froid (~50 s) à la première visite.
+
+name: Keep Render awake
+
+on:
+  schedule:
+    # Toutes les 10 minutes (minimum autorisé par GitHub : 5 minutes).
+    - cron: '*/10 * * * *'
+  workflow_dispatch:
+
+concurrency:
+  group: keep-awake
+  cancel-in-progress: false
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Ping /api/ping
+        env:
+          TARGET: https://dprinting.onrender.com/api/ping
+        run: |
+          set -eu
+          for attempt in 1 2 3; do
+            echo "Tentative $attempt/3..."
+            code=$(curl -sS -o /tmp/ping.json -w '%{http_code}' \
+              --max-time 60 --retry 2 --retry-delay 5 "$TARGET" || echo "000")
+            echo "HTTP $code"
+            if [ "$code" = "200" ]; then
+              cat /tmp/ping.json || true
+              echo
+              echo "Service éveillé."
+              exit 0
+            fi
+            sleep 20
+          done
+          echo "Le service n'a pas répondu (build en cours, service endormi ou erreur)."
+          # On ne fait pas échouer le workflow : un échec ne changerait rien et
+          # enverrait des notifications inutiles.
+          exit 0

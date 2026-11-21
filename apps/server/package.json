@@ -9,6 +9,7 @@
     "start": "node dist/server.mjs",
     "typecheck": "tsc -p tsconfig.json",
     "test": "tsx tests/run.ts",
-    "admin:hash": "tsx src/scripts/hash-password.ts"
+    "admin:hash": "tsx src/scripts/hash-password.ts",
+    "keepalive:setup": "tsx src/scripts/setup-keepalive.ts"
   }
 }
